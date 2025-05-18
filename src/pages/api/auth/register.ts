@@ -34,6 +34,7 @@ export default async function handler(
                 userId: result.insertedId,
             });
         } catch (error) {
+            console.error(error);
             res.status(500).json({ error: "Gabim gjatë regjistrimit" });
         }
     } else {
