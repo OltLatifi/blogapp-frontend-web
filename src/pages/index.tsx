@@ -1,9 +1,10 @@
 import Head from "next/head";
+import Hero from "@/components/home/hero";
 
 function HomePage() {
   return (
     <div>
-      <h1>Home Page</h1>
+      <Hero />
     </div>
   );
 }
