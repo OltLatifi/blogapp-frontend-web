@@ -40,3 +40,16 @@ export async function getUserBlogs(userEmail: string) {
         .toArray();
     return blogs;
 } 
+
+export async function deleteBlog(id: string, authorId: string) {
+    const client = await clientPromise;
+    const db = client.db("myapp");
+
+    const comments = await db.collection("comments").find({ blogId: id }).toArray();
+
+    if (comments.length > 0) {
+        await db.collection("comments").deleteMany({ blogId: id });
+    }
+
+    await db.collection("blogs").deleteOne({ _id: new ObjectId(id) });
+}
