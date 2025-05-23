@@ -25,12 +25,12 @@ export default async function handler(
                 if (!content) {
                     return res.status(400).json({ error: "Content is required" });
                 }
-                const result = await updateComment(commentId, content);
+                await updateComment(commentId, content);
                 res.status(200).json({ message: "Comment updated successfully" });
                 break;
             }
             case "DELETE": {
-                const result = await deleteComment(commentId);
+                await deleteComment(commentId);
                 res.status(200).json({ message: "Comment deleted successfully" });
                 break;
             }

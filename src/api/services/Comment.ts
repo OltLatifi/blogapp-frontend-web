@@ -74,7 +74,7 @@ export async function deleteComment(commentId: string) {
 
     await deleteReplies(commentId);
     const result = await db.collection("comments").deleteOne({
-        _id: new ObjectId(commentId)
+        _id: new ObjectId(commentId),
     });
     return result;
 } 

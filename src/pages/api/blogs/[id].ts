@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { deleteBlog } from "@/api/services/Blog";
 
 export default async function handler(
     req: NextApiRequest,
@@ -73,10 +74,7 @@ export default async function handler(
                     return res.status(403).json({ error: "Unauthorized to delete this blog" });
                 }
 
-                await db.collection("blogs").deleteOne({
-                    _id: new ObjectId(id),
-                    authorId: session.user.email
-                });
+                await deleteBlog(id, session.user.email);
 
                 return res.status(200).json({ message: "Blog deleted successfully" });
 
