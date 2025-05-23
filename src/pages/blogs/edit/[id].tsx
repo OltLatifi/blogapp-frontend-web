@@ -10,19 +10,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { blogService } from "@/services/blogService";
+import { useEffect } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import { Label } from "@/components/ui/label";
 
 const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
     content: z.string().min(1, "Content is required"),
+    imageUrl: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-interface Blog {
-    _id: string;
-    title: string;
-    content: string;
-}
 
 export default function EditBlogPage() {
     const router = useRouter();
@@ -58,36 +57,21 @@ function EditBlogForm({ blogId }: { blogId: string }) {
 
     const { data: blog, isLoading } = useQuery({
         queryKey: ["blog", blogId],
-        queryFn: async () => {
-            const response = await fetch(`/api/blogs/${blogId}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch blog");
-            }
-            const data = await response.json();
-            form.reset({
-                title: data.title,
-                content: data.content,
-            });
-            return data;
-        },
+        queryFn: () => blogService.getById(blogId),
     });
 
-    const updateBlogMutation = useMutation({
-        mutationFn: async (values: FormValues) => {
-            const response = await fetch(`/api/blogs/${blogId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
+    useEffect(() => {
+        if (blog) {
+            form.reset({
+                title: blog.title,
+                content: blog.content,
+                imageUrl: blog.imageUrl || "",
             });
+        }
+    }, [blog, form]);
 
-            if (!response.ok) {
-                throw new Error("Failed to update blog post");
-            }
-
-            return response.json();
-        },
+    const updateBlogMutation = useMutation({
+        mutationFn: (values: FormValues) => blogService.update(blogId, values),
         onSuccess: () => {
             toast.success("Blog updated successfully");
             router.push(`/blogs/${blogId}`);
@@ -148,6 +132,77 @@ function EditBlogForm({ blogId }: { blogId: string }) {
                                 </FormItem>
                             )}
                         />
+                        <div className="space-y-2">
+                            <Label>Cover Image</Label>
+                            <CldUploadWidget
+                                uploadPreset="blog_images"
+                                options={{
+                                    sources: ["local", "url"],
+                                    maxFiles: 1,
+                                    resourceType: "image",
+                                    showAdvancedOptions: false,
+                                    styles: {
+                                        palette: {
+                                            window: "#FFFFFF",
+                                            windowBorder: "#90A0B3",
+                                            tabIcon: "#0078FF",
+                                            menuIcons: "#5A616A",
+                                            textDark: "#000000",
+                                            textLight: "#FFFFFF",
+                                            link: "#0078FF",
+                                            action: "#FF620C",
+                                            inactiveTabIcon: "#0E2F5A",
+                                            error: "#F44235",
+                                            inProgress: "#0078FF",
+                                            complete: "#20B832",
+                                            sourceBg: "#E4EBF1"
+                                        }
+                                    }
+                                }}
+                                onSuccess={(result) => {
+                                    const info = result.info as { secure_url: string };
+                                    if (info?.secure_url) {
+                                        form.setValue("imageUrl", info.secure_url);
+                                        toast.success("Image uploaded successfully");
+                                    }
+                                }}
+                                onError={(error) => {
+                                    toast.error("Failed to upload image");
+                                    console.error("Upload error:", error);
+                                }}
+                            >
+                                {({ open }) => (
+                                    <div className="space-y-4">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => open()}
+                                            className="w-full"
+                                        >
+                                            Upload Image
+                                        </Button>
+                                        {form.watch("imageUrl") && (
+                                            <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                                                <img
+                                                    src={form.watch("imageUrl")}
+                                                    alt="Blog cover"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    className="absolute top-2 right-2"
+                                                    onClick={() => form.setValue("imageUrl", "")}
+                                                >
+                                                    Remove
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </CldUploadWidget>
+                        </div>
                         <div className="flex justify-end space-x-4">
                             <Button
                                 type="button"

@@ -5,31 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import Hero from "@/components/home/hero";
-
-interface Blog {
-    _id: string;
-    title: string;
-    content: string;
-    author?: {
-        name?: string;
-        email?: string;
-    };
-    createdAt: string;
-}
+import { blogService } from "@/services/blogService";
+import Image from "next/image";
 
 export default function HomePage() {
     const { data: session } = useSession();
     const router = useRouter();
 
-    const { data: blogs, isLoading } = useQuery<Blog[]>({
+    const { data: blogs, isLoading } = useQuery({
         queryKey: ["blogs"],
-        queryFn: async () => {
-            const response = await fetch("/api/blogs");
-            if (!response.ok) {
-                throw new Error("Failed to fetch blogs");
-            }
-            return response.json();
-        },
+        queryFn: blogService.getAll,
     });
 
     if (isLoading) {
@@ -50,11 +35,22 @@ export default function HomePage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {blogs?.map((blog) => (
-                    <Card key={blog._id} className="hover:shadow-lg transition-shadow">
+                    <Card key={blog._id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                        {blog.imageUrl && (
+                            <div className="relative w-full h-48">
+                                <Image
+                                    src={blog.imageUrl}
+                                    alt={blog.title}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                />
+                            </div>
+                        )}
                         <CardHeader>
                             <CardTitle className="text-xl">{blog.title}</CardTitle>
                             <div className="text-sm text-gray-500">
-                                By {blog.author?.name || "Anonymous"} • {formatDistanceToNow(new Date(blog.createdAt), { addSuffix: true })}
+                                By {blog.author?.name ?? "Anonymous"} • {formatDistanceToNow(new Date(blog.createdAt), { addSuffix: true })}
                             </div>
                         </CardHeader>
                         <CardContent>
