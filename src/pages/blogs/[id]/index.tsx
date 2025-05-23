@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { CommentSection } from "@/components/comments/CommentSection";
 
 export default function BlogPostPage() {
     const router = useRouter();
@@ -101,6 +102,11 @@ export default function BlogPostPage() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold mb-4">Comments</h2>
+                        <CommentSection blogId={blog._id} />
+                    </div>
                 </div>
             </article>
         </div>
