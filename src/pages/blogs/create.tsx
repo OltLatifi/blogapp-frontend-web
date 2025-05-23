@@ -29,10 +29,8 @@ export default function CreateBlog() {
         return <div>Loading...</div>;
     }
 
-    console.log(session);
-
-    if (session?.error === "Unauthorized") {
-        // router.push("/auth/login");
+    if (!session) {
+        router.push("/auth/login");
         return null;
     }
 

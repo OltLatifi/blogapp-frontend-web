@@ -50,18 +50,7 @@ function Navbar() {
         return (
             <div className={`flex flex-col ${isMobile ? "space-y-8 text-2xl" : "space-x-8 flex-row items-center"} text-gray-900 text-base font-normal`}>
                 <Link href="/" onClick={handleLinkClick}>Home</Link>
-                <Link href="/blog" onClick={handleLinkClick}>Blog</Link>
-                <Link href="/post/sample" onClick={handleLinkClick}>Single Post</Link>
-                <div className="relative group">
-                    <button className="flex items-center space-x-1 focus:outline-none">
-                        <span>Other Pages</span>
-                        <ChevronDownIcon className="w-4 h-4 ml-1" />
-                    </button>
-                    <div className={`absolute left-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-10 ${isMobile ? "static opacity-100 pointer-events-auto mt-0 border-none shadow-none" : ""}`}>
-                        <Link href="/about" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>About</Link>
-                        <Link href="/contact" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>Contact</Link>
-                    </div>
-                </div>
+                <Link href="/blogs/my-blogs" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>My Blogs</Link>
             </div>
         );
     }
