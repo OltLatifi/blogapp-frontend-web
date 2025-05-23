@@ -4,10 +4,8 @@ export interface Blog {
     _id: string;
     title: string;
     content: string;
-    author?: {
-        name?: string;
-        email?: string;
-    };
+    authorName: string;
+    authorEmail: string;
     createdAt: string;
     tags?: string[];
     imageUrl?: string;
@@ -25,6 +23,11 @@ export interface UpdateBlogData extends CreateBlogData {}
 export const blogService = {
     getAll: async (): Promise<Blog[]> => {
         const { data } = await api.get<Blog[]>("/blogs");
+        return data;
+    },
+
+    getUserBlogs: async (): Promise<Blog[]> => {
+        const { data } = await api.get<Blog[]>("/blogs/my-blogs");
         return data;
     },
 

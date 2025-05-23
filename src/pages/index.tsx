@@ -7,6 +7,7 @@ import { formatDistanceToNow } from "date-fns";
 import Hero from "@/components/home/hero";
 import { blogService } from "@/services/blogService";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HomePage() {
     const { data: session } = useSession();
@@ -24,18 +25,9 @@ export default function HomePage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <Hero />
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Blog Posts</h1>
-                {session && (
-                    <Button onClick={() => router.push("/blogs/new")}>
-                        Create New Post
-                    </Button>
-                )}
-            </div>
-
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {blogs?.map((blog) => (
-                    <Card key={blog._id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                    <Card key={blog._id} className="hover:shadow-lg transition-shadow overflow-hidden pt-0">
                         {blog.imageUrl && (
                             <div className="relative w-full h-48">
                                 <Image
@@ -50,18 +42,17 @@ export default function HomePage() {
                         <CardHeader>
                             <CardTitle className="text-xl">{blog.title}</CardTitle>
                             <div className="text-sm text-gray-500">
-                                By {blog.author?.name ?? "Anonymous"} • {formatDistanceToNow(new Date(blog.createdAt), { addSuffix: true })}
+                                By {blog.authorName ?? "Anonymous"} • {formatDistanceToNow(new Date(blog.createdAt), { addSuffix: true })}
                             </div>
                         </CardHeader>
                         <CardContent>
                             <p className="text-gray-600 line-clamp-3">{blog.content}</p>
-                            <Button
-                                variant="link"
-                                className="mt-4 p-0"
-                                onClick={() => router.push(`/blogs/${blog._id}`)}
+                            <Link
+                                href={`/blogs/${blog._id}`}
+                                className="mt-4 p-0 hover:underline"
                             >
                                 Read more
-                            </Button>
+                            </Link>
                         </CardContent>
                     </Card>
                 ))}

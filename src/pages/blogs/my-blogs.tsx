@@ -3,43 +3,37 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import useFetch from "@/hooks/useFetch";
 import { formatDistanceToNow } from "date-fns";
-
-interface Blog {
-    _id: string;
-    title: string;
-    content: string;
-    authorId: string;
-    authorName: string;
-    createdAt: string;
-    tags?: string[];
-    imageUrl?: string;
-}
+import { toast } from "sonner";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { blogService, Blog } from "@/services/blogService";
 
 export default function MyBlogs() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [blogs, setBlogs] = useState<Blog[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const queryClient = useQueryClient();
     const [error, setError] = useState("");
-    const { data, loading, error: fetchError, remove } = useFetch<Blog[]>("/api/blogs/my-blogs");
 
-    useEffect(() => {
-        if (data) {
-            setBlogs(data);
-            setIsLoading(false);
-        }
-    }, [data]);
+    const { data: blogs, isLoading } = useQuery<Blog[]>({
+        queryKey: ["my-blogs"],
+        queryFn: () => blogService.getUserBlogs(),
+        enabled: !!session?.user,
+    });
 
-    useEffect(() => {
-        if (fetchError) {
-            setError("Failed to fetch blogs");
-            setIsLoading(false);
-        }
-    }, [fetchError]);
+    const deleteBlogMutation = useMutation({
+        mutationFn: (blogId: string) => blogService.delete(blogId),
+        onSuccess: () => {
+            toast.success("Blog deleted successfully");
+            queryClient.invalidateQueries({ queryKey: ["my-blogs"] });
+        },
+        onError: (error) => {
+            const errorMessage = error instanceof Error ? error.message : "Failed to delete blog";
+            toast.error(errorMessage);
+            setError(errorMessage);
+        },
+    });
 
-    if (status === "loading" || isLoading || loading) {
+    if (status === "loading" || isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -57,17 +51,12 @@ export default function MyBlogs() {
     };
 
     const handleEditClick = (blogId: string) => {
-        router.push(`/blogs/edit/${blogId}`);
+        router.push(`/blogs/${blogId}/edit`);
     };
 
-    const handleDeleteClick = async (blogId: string) => {
+    const handleDeleteClick = (blogId: string) => {
         if (window.confirm("Are you sure you want to delete this blog?")) {
-            try {
-                await remove(blogId);
-                setBlogs(blogs.filter(blog => blog._id !== blogId));
-            } catch (err) {
-                setError("Failed to delete blog");
-            }
+            deleteBlogMutation.mutate(blogId);
         }
     };
 
@@ -90,7 +79,7 @@ export default function MyBlogs() {
                 </div>
             )}
 
-            <Card>
+            <Card className="pb-0">
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -103,7 +92,7 @@ export default function MyBlogs() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {blogs.map((blog) => (
+                                {blogs?.map((blog) => (
                                     <tr key={blog._id} className="border-b hover:bg-gray-50">
                                         <td className="p-4">
                                             <div className="font-medium">{blog.title}</div>
@@ -148,8 +137,9 @@ export default function MyBlogs() {
                                                     variant="destructive"
                                                     size="sm"
                                                     onClick={() => handleDeleteClick(blog._id)}
+                                                    disabled={deleteBlogMutation.isPending}
                                                 >
-                                                    Delete
+                                                    {deleteBlogMutation.isPending ? "Deleting..." : "Delete"}
                                                 </Button>
                                             </div>
                                         </td>
@@ -161,7 +151,7 @@ export default function MyBlogs() {
                 </CardContent>
             </Card>
 
-            {blogs.length === 0 && !error && (
+            {blogs?.length === 0 && !error && (
                 <div className="text-center py-12">
                     <p className="text-gray-500 text-lg">You haven't created any blogs yet</p>
                     <Button onClick={handleCreateClick} className="mt-4">

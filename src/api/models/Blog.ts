@@ -7,4 +7,4 @@ export interface Blog {
     updatedAt: Date;
     tags?: string[];
     imageUrl?: string;
-} 
+}

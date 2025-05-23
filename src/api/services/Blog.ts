@@ -31,11 +31,11 @@ export async function getBlogById(id: string) {
     return blog;
 }
 
-export async function getUserBlogs(userId: string) {
+export async function getUserBlogs(userEmail: string) {
     const client = await clientPromise;
     const db = client.db("myapp");
     const blogs = await db.collection("blogs")
-        .find({ authorId: userId })
+        .find({ authorId: userEmail })
         .sort({ createdAt: -1 })
         .toArray();
     return blogs;

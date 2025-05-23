@@ -62,8 +62,26 @@ export default async function handler(
 
                 return res.status(200).json(updateResult.value);
 
+            case "DELETE":
+                const blogToDelete = await db.collection("blogs").findOne({ _id: new ObjectId(id) });
+                
+                if (!blogToDelete) {
+                    return res.status(404).json({ error: "Blog not found" });
+                }
+
+                if (blogToDelete.authorId !== session.user.email) {
+                    return res.status(403).json({ error: "Unauthorized to delete this blog" });
+                }
+
+                await db.collection("blogs").deleteOne({
+                    _id: new ObjectId(id),
+                    authorId: session.user.email
+                });
+
+                return res.status(200).json({ message: "Blog deleted successfully" });
+
             default:
-                res.setHeader("Allow", ["GET", "PUT"]);
+                res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
                 return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
         }
     } catch (error) {

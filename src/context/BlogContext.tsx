@@ -2,15 +2,14 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { Blog } from "@/api/models/Blog";
 
 interface BlogContextType {
-    blogs: typeof Blog[];
-    setBlogs: React.Dispatch<React.SetStateAction<typeof Blog[]>>;
+    blogs: Blog[];
+    setBlogs: React.Dispatch<React.SetStateAction<Blog[]>>;
 }
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
 export const BlogProvider = ({ children }: { children: ReactNode }) => {
-    // Initialize with an empty array matching the type
-    const [blogs, setBlogs] = useState<typeof Blog[]>([]);
+    const [blogs, setBlogs] = useState<Blog[]>([]);
 
     return (
         <BlogContext.Provider value={{ blogs, setBlogs }}>

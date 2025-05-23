@@ -13,12 +13,12 @@ export default async function handler(
 
     try {
         const session = await getServerSession(req, res, authOptions);
-        console.log(session);
-        if (!session?.user?.id) {
+        
+        if (!session?.user?.email) {
             return res.status(401).json({ error: "Unauthorized" });
         }
 
-        const blogs = await getUserBlogs(session.user.id);
+        const blogs = await getUserBlogs(session.user.email);
         return res.status(200).json(blogs);
     } catch (error) {
         console.error("Error fetching user blogs:", error);
