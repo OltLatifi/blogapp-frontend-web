@@ -20,7 +20,7 @@ export function FavoriteButton({ blogId, initialIsFavorite = false }: FavoriteBu
 
     const { data: favorites } = useQuery({
         queryKey: ["favorites"] as const,
-        queryFn: () => favoriteService.getFavorites(session?.user?.id ?? ""),
+        queryFn: () => favoriteService.getFavorites(),
         enabled: !!session,
     });
 
@@ -33,7 +33,7 @@ export function FavoriteButton({ blogId, initialIsFavorite = false }: FavoriteBu
     const toggleFavoriteMutation = useMutation({
         mutationFn: async () => {
             if (isFavorite) {
-                await favoriteService.removeFavorite(session?.user?.id ?? "", blogId);
+                await favoriteService.removeFavorite(blogId);
             } else {
                 await favoriteService.addFavorite({ userId: session?.user?.id ?? "", blogId });
             }

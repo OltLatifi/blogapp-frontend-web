@@ -17,7 +17,7 @@ export default function FavoritesPage() {
 
     const { data: favorites, isLoading: isLoadingFavorites } = useQuery({
         queryKey: ["favorites"],
-        queryFn: () => favoriteService.getFavorites(session?.user?.id ?? ""),
+        queryFn: () => favoriteService.getFavorites(),
         enabled: !!session
     });
 
@@ -49,7 +49,7 @@ export default function FavoritesPage() {
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-3xl font-bold mb-8">My Favorites</h1>
                 <div className="text-center text-gray-600">
-                    <p>You haven't favorited any articles yet.</p>
+                    <p>You haven&apos;t favorited any articles yet.</p>
                     <Link href="/" className="text-blue-500 hover:underline mt-2 inline-block">
                         Browse articles
                     </Link>

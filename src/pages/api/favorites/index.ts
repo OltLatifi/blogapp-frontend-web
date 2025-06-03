@@ -48,6 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 await favoriteService.removeFavorite(userId, blogId);
                 return res.status(200).json({ message: "Favorite removed" });
             } catch (error) {
+                console.error(error);
                 return res.status(500).json({ message: "Error removing favorite" });
             }
 

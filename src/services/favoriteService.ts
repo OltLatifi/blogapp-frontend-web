@@ -11,12 +11,12 @@ export const favoriteService = {
         return response.data;
     },
 
-    getFavorites: async (userId: string) => {
+    getFavorites: async () => {
         const response = await api.get("/favorites");
         return response.data;
     },
 
-    removeFavorite: async (userId: string, blogId: string) => {
+    removeFavorite: async (blogId: string) => {
         const response = await api.delete("/favorites", { data: { blogId } });
         return response.data;
     },
