@@ -27,6 +27,7 @@ export default async function handler(
                 email,
                 password: hashedPassword,
                 createdAt: new Date(),
+                role: "user",
             };
             const result = await createUser(newUser);
             res.status(201).json({

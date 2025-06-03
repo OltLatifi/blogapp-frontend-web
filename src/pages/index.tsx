@@ -1,7 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import Hero from "@/components/home/hero";
@@ -11,9 +8,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function HomePage() {
-    const { data: session } = useSession();
-    const router = useRouter();
-
     const { data: blogs, isLoading } = useQuery({
         queryKey: ["blogs"],
         queryFn: blogService.getAll,

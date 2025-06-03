@@ -40,7 +40,7 @@ export default async function handler(
             message: "Comment created successfully",
             commentId: result.insertedId 
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: "Error creating comment" });
     }
 } 

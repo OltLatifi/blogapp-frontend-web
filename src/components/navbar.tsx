@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDownIcon, Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 function Navbar() {

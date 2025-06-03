@@ -59,8 +59,8 @@ export default function SignUp() {
             } else {
                 router.push("/auth/login");
             }
-        } catch (err) {
-            setError("Ndodhi një gabim gjatë regjistrimit. Ju lutemi provoni përsëri.");
+        } catch {
+            setError("There was an error during registration. Please try again.");
         } finally {
             setIsSubmitting(false);
         }

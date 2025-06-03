@@ -18,7 +18,7 @@ export default async function handler(
 
         const comments = await getCommentsByBlogId(blogId);
         res.status(200).json(comments);
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: "Error fetching comments" });
     }
 } 

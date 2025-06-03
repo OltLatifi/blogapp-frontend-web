@@ -18,8 +18,6 @@ export interface CreateBlogData {
     imageUrl?: string;
 }
 
-export interface UpdateBlogData extends CreateBlogData {}
-
 export const blogService = {
     getAll: async (): Promise<Blog[]> => {
         const { data } = await api.get<Blog[]>("/blogs");
@@ -41,7 +39,7 @@ export const blogService = {
         return data;
     },
 
-    update: async (id: string, blogData: UpdateBlogData): Promise<Blog> => {
+    update: async (id: string, blogData: CreateBlogData): Promise<Blog> => {
         const { data } = await api.put<Blog>(`/blogs/${id}`, blogData);
         return data;
     },

@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { MessageSquare, Pencil, Trash2, X } from "lucide-react";
-import { ObjectId } from "mongodb";
 
 interface CommentSectionProps {
     blogId: string;

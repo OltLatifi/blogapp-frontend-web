@@ -22,7 +22,7 @@ export default async function handler(
     }
 
     try {
-        const client = await clientPromise;
+        const client = await clientPromise();
         const db = client.db("myapp");
 
         switch (req.method) {
@@ -74,7 +74,7 @@ export default async function handler(
                     return res.status(403).json({ error: "Unauthorized to delete this blog" });
                 }
 
-                await deleteBlog(id, session.user.email);
+                await deleteBlog(id);
 
                 return res.status(200).json({ message: "Blog deleted successfully" });
 

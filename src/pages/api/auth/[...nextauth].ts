@@ -1,4 +1,4 @@
-import NextAuth, { DefaultSession, DefaultUser, NextAuthOptions } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "@/lib/mongodb";
@@ -6,6 +6,8 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { compare } from "bcryptjs";
 import { getUser } from "@/api/services/User";
 import GoogleProvider from "next-auth/providers/google";
+import { AuthOptions } from "next-auth";
+import { Adapter } from "next-auth/adapters";
 
 declare module "next-auth" {
     interface Session extends DefaultSession {
@@ -28,8 +30,18 @@ declare module "next-auth/jwt" {
     }
 }
 
-export const authOptions = {
-    adapter: MongoDBAdapter(clientPromise),
+type JwtCallbackParams = {
+    token: JWT;
+    user: User;
+}
+
+type SessionCallbackParams = {
+    session: Session;
+    token: JWT;
+}
+
+export const authOptions: AuthOptions = {
+    adapter: MongoDBAdapter(clientPromise) as Adapter,
     providers: [
         CredentialsProvider({
             name: "credentials",
@@ -38,7 +50,7 @@ export const authOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                const user = await getUser(credentials?.email!);
+                const user = await getUser(credentials?.email ?? "");
                 if (!user) throw new Error("Email does not exist");
                 const isValid = await compare(credentials!.password,
                     user.password);
@@ -57,14 +69,14 @@ export const authOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }: { token: JWT; user: any }) {
+        async jwt({ token, user }: JwtCallbackParams) {
             if (user) {
                 token.id = user.id;
                 token.role = user.role;
             }
             return token;
         },
-        async session({ session, token }: { session: any; token: JWT }) {
+        async session({ session, token }: SessionCallbackParams) {
             if (session.user) {
                 session.user.id = token.id;
                 session.user.role = token.role;
@@ -76,9 +88,9 @@ export const authOptions = {
         signIn: "/auth/login",
     },
     session: {
-        strategy: "jwt" as "jwt",
+        strategy: "jwt" as const,
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
 
-export default NextAuth(authOptions as any);
+export default NextAuth(authOptions);

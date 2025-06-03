@@ -37,7 +37,7 @@ export default async function handler(
             default:
                 res.status(405).json({ error: "Method not allowed" });
         }
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: "Error processing comment" });
     }
 } 

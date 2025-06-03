@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { GetServerSidePropsContext } from "next";
 
-export default function SignIn({ csrfToken }: { csrfToken: string }) {
+export default function SignIn() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -115,7 +116,7 @@ export default function SignIn({ csrfToken }: { csrfToken: string }) {
                     
                     <CardFooter>
                         <div className="text-center">
-                            Don't have an account? <Link href="/auth/register" className="text-blue-400 hover:underline">Register</Link>
+                            Don&apos;t have an account? <Link href="/auth/register" className="text-blue-400 hover:underline">Register</Link>
                         </div>
                     </CardFooter>
                 </Card>
@@ -123,7 +124,7 @@ export default function SignIn({ csrfToken }: { csrfToken: string }) {
     );
 }
 
-SignIn.getInitialProps = async (context: any) => {
+SignIn.getInitialProps = async (context: GetServerSidePropsContext) => {
     return {
         csrfToken: await getCsrfToken(context),
     };

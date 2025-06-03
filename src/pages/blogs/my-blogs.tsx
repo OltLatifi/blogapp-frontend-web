@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
@@ -153,7 +153,7 @@ export default function MyBlogs() {
 
             {blogs?.length === 0 && !error && (
                 <div className="text-center py-12">
-                    <p className="text-gray-500 text-lg">You haven't created any blogs yet</p>
+                    <p className="text-gray-500 text-lg">You haven&apos;t created any blogs yet</p>
                     <Button onClick={handleCreateClick} className="mt-4">
                         Create Your First Blog
                     </Button>

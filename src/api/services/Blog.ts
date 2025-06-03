@@ -41,7 +41,7 @@ export async function getUserBlogs(userEmail: string) {
     return blogs;
 }
 
-export async function deleteBlog(id: string, authorId: string) {
+export async function deleteBlog(id: string) {
     const client = await getMongoClient();
     const db = client.db("myapp");
 

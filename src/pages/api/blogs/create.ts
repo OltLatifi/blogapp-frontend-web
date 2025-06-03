@@ -41,7 +41,7 @@ export default async function handler(
             message: "Blog created successfully",
             blogId: result.insertedId 
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: "Error creating blog" });
     }
 } 
