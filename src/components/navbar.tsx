@@ -57,7 +57,12 @@ function Navbar() {
             <div className={`flex flex-col ${isMobile ? "space-y-4 text-lg" : "space-x-8 flex-row items-center"} text-gray-900 text-base font-normal`}>
                 <Link href="/" onClick={handleLinkClick}>Home</Link>
                 <Link href="/about" onClick={handleLinkClick}>About</Link>
-                {session && <Link href="/blogs/my-blogs" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>My Blogs</Link>}
+                {session && (
+                    <>
+                        <Link href="/blogs/my-blogs" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>My Blogs</Link>
+                        <Link href="/favorites" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>Favorites</Link>
+                    </>
+                )}
                 {session ? (
                     <button
                         onClick={handleLogout}

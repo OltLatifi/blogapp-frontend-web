@@ -6,11 +6,12 @@ import { blogService } from "@/services/blogService";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 
 export default function HomePage() {
     const { data: blogs, isLoading } = useQuery({
         queryKey: ["blogs"],
-        queryFn: blogService.getAll,
+        queryFn: () => blogService.getAll(),
     });
 
     if (isLoading) {
@@ -68,12 +69,15 @@ export default function HomePage() {
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-gray-600 line-clamp-3">{blog.content}</p>
-                                    <Link
-                                        href={`/blogs/${blog._id}`}
-                                        className="mt-4 p-0 hover:underline"
-                                    >
-                                        Read more
-                                    </Link>
+                                    <div className="flex justify-between items-center mt-4">
+                                        <Link
+                                            href={`/blogs/${blog._id}`}
+                                            className="hover:underline"
+                                        >
+                                            Read more
+                                        </Link>
+                                        <FavoriteButton blogId={blog._id} />
+                                    </div>
                                 </CardContent>
                             </Card>
                         </motion.div>
