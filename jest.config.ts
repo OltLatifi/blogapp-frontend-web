@@ -10,10 +10,13 @@ const config: Config = {
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^uuid$': require.resolve('uuid'),
+    '^@auth/mongodb-adapter$': '<rootDir>/src/__tests__/mocks/mongodb-adapter.ts'
   },
   testMatch: ['**/__tests__/**/*.test.[jt]s?(x)'],
   transformIgnorePatterns: [
-    '/node_modules/(?!(jose|openid-client|@panva|oidc-token-hash|next-auth)/)',
+    '/node_modules/(?!(jose|openid-client|@panva|oidc-token-hash|next-auth|@auth|@next-auth|@babel|@jest|@testing-library)/)',
   ],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
@@ -24,4 +27,4 @@ const config: Config = {
   },
 }
 
-export default createJestConfig(config) 
+export default createJestConfig(config)

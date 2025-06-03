@@ -42,7 +42,7 @@ export default function BlogPostPage() {
         return <div>Blog not found</div>;
     }
 
-    const isAuthor = session?.user?.email === blog.authorEmail;
+    const isAuthor = session && session?.user?.email === blog.authorEmail;
 
     return (
         <div className="container mx-auto px-4 py-8">

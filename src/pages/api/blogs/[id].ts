@@ -5,16 +5,20 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { deleteBlog } from "@/api/services/Blog";
 
+const getSession = async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session?.user) {
+        throw new Error("Unauthorized");
+    }
+
+    return session;
+}
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session?.user) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
-
     const { id } = req.query;
 
     if (!id || typeof id !== "string") {
@@ -36,6 +40,7 @@ export default async function handler(
                 return res.status(200).json(blog);
 
             case "PUT":
+                const updateSession = await getSession(req, res);
                 const { title, content } = req.body;
 
                 if (!title || !content) {
@@ -45,7 +50,7 @@ export default async function handler(
                 const updateResult = await db.collection("blogs").findOneAndUpdate(
                     { 
                         _id: new ObjectId(id),
-                        authorId: session.user.id
+                        authorId: updateSession.user.id
                     },
                     { 
                         $set: { 
@@ -64,13 +69,14 @@ export default async function handler(
                 return res.status(200).json(updateResult.value);
 
             case "DELETE":
+                const deleteSession = await getSession(req, res);
                 const blogToDelete = await db.collection("blogs").findOne({ _id: new ObjectId(id) });
                 
                 if (!blogToDelete) {
                     return res.status(404).json({ error: "Blog not found" });
                 }
 
-                if (blogToDelete.authorId !== session.user.email) {
+                if (blogToDelete.authorId !== deleteSession.user.email) {
                     return res.status(403).json({ error: "Unauthorized to delete this blog" });
                 }
 
