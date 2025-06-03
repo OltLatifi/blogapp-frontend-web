@@ -1,9 +1,9 @@
-import clientPromise from "@/lib/mongodb";
+import getMongoClient from "@/lib/mongodb";
 import { User } from "@/api/models/User";
 import { ObjectId } from "mongodb";
 
 export async function createUser(data: User) {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db("myapp");
     const result = await db.collection("users").insertOne({
         ...data,
@@ -13,7 +13,7 @@ export async function createUser(data: User) {
 }
 
 export async function getUserById(id: string) {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db("myapp");
     const result = await db
         .collection("users")
@@ -22,7 +22,7 @@ export async function getUserById(id: string) {
 }
 
 export async function getUser(email: string) {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db("myapp");
     const result = await db
         .collection("users")

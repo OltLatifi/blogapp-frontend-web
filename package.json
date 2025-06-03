@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "NODE_ENV=development tsx scripts/seed.ts"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.0",
@@ -32,6 +33,7 @@
     "react-hook-form": "^7.56.4",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.0",
+    "tsx": "^4.19.4",
     "zod": "^3.25.23"
   },
   "devDependencies": {
@@ -40,9 +42,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^16.4.5",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "tw-animate-css": "^1.2.9",
     "typescript": "^5"
   }
