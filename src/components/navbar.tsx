@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Menu, X, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 
 function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
+    const { data: session } = useSession();
 
     function handleMobileMenuToggle() {
         setMobileMenuOpen((open) => !open);
@@ -12,6 +14,10 @@ function Navbar() {
 
     function handleCloseMobileMenu() {
         setMobileMenuOpen(false);
+    }
+
+    function handleLogout() {
+        signOut({ callbackUrl: "/" });
     }
 
     useEffect(() => {
@@ -48,9 +54,22 @@ function Navbar() {
             if (isMobile) handleCloseMobileMenu();
         }
         return (
-            <div className={`flex flex-col ${isMobile ? "space-y-8 text-2xl" : "space-x-8 flex-row items-center"} text-gray-900 text-base font-normal`}>
+            <div className={`flex flex-col ${isMobile ? "space-y-4 text-lg" : "space-x-8 flex-row items-center"} text-gray-900 text-base font-normal`}>
                 <Link href="/" onClick={handleLinkClick}>Home</Link>
-                <Link href="/blogs/my-blogs" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>My Blogs</Link>
+                {session && <Link href="/blogs/my-blogs" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLinkClick}>My Blogs</Link>}
+                {session ? (
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded"
+                    >
+                        <LogOut className="w-5 h-5" />
+                        <span>Logout</span>
+                    </button>
+                ) : (
+                    <Link href="/auth/login" className="block px-4 py-2 hover:bg-gray-100 rounded" onClick={handleLinkClick}>
+                        Login
+                    </Link>
+                )}
             </div>
         );
     }
@@ -68,9 +87,7 @@ function Navbar() {
                 onClick={handleMobileMenuToggle}
                 aria-label="Toggle menu"
             >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+                <Menu className="w-6 h-6" />
             </button>
         );
     }
@@ -84,9 +101,7 @@ function Navbar() {
                     onClick={handleCloseMobileMenu}
                     aria-label="Close menu"
                 >
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <X className="w-8 h-8" />
                 </button>
                 {renderNavLinks(true)}
             </div>

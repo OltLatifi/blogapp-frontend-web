@@ -1,4 +1,4 @@
-import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser, NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "@/lib/mongodb";
@@ -11,17 +11,20 @@ declare module "next-auth" {
     interface Session extends DefaultSession {
         user: {
             id: string;
+            role: string;
         } & DefaultSession["user"]
     }
 
     interface User extends DefaultUser {
         id: string;
+        role: string;
     }
 }
 
 declare module "next-auth/jwt" {
     interface JWT {
         id: string;
+        role: string;
     }
 }
 
@@ -44,6 +47,7 @@ export const authOptions = {
                         id: user._id.toString(),
                         email: user.email,
                         emailVerified: user.emailVerified ?? null,
+                        role: user.role,
                     };
             },
         }),
@@ -56,12 +60,14 @@ export const authOptions = {
         async jwt({ token, user }: { token: JWT; user: any }) {
             if (user) {
                 token.id = user.id;
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }: { session: any; token: JWT }) {
             if (session.user) {
                 session.user.id = token.id;
+                session.user.role = token.role;
             }
             return session;
         },
@@ -75,4 +81,4 @@ export const authOptions = {
     secret: process.env.NEXTAUTH_SECRET,
 };
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions as any);

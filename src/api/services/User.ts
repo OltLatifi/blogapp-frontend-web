@@ -27,5 +27,6 @@ export async function getUser(email: string) {
     const result = await db
         .collection("users")
         .findOne({ email });
+    console.log("result", result)
     return result;
 }
