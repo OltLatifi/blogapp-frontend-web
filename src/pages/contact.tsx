@@ -1,6 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { contactSchema } from "@/schemas/contactSchema";
+import { contactService } from "@/services/contactService";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   FaFacebook,
   FaTwitter,
@@ -10,15 +15,45 @@ import {
   FaPhone,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { toast } from "sonner";
+
+interface ContactForm {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
 
 export default function ContactUsPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ContactForm>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+  });
+  const createContactMutation = useMutation({
+    mutationFn: async (data: ContactForm) => {
+      return contactService.create(data);
+    },
+    onSuccess: () => {
+      toast.success("Message sent successfully!");
+      reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || "Failed to send message");
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Add form submission logic here
-    setTimeout(() => setIsSubmitting(false), 1500);
+  const onSubmit = (data: ContactForm) => {
+    createContactMutation.mutate(data);
   };
 
   const socialLinks = [
@@ -121,7 +156,7 @@ export default function ContactUsPage() {
           <h2 className="text-xl font-semibold mb-4 text-gray-900">
             Send us a message
           </h2>
-          <form className="space-y-5" onSubmit={handleSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="name"
@@ -132,7 +167,7 @@ export default function ContactUsPage() {
               <Input
                 type="text"
                 id="name"
-                name="name"
+                {...register("name")}
                 required
                 className="w-full rounded-md border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 shadow-sm"
                 placeholder="Your name"
@@ -149,7 +184,7 @@ export default function ContactUsPage() {
               <Input
                 type="email"
                 id="email"
-                name="email"
+                {...register("email")}
                 required
                 className="w-full rounded-md border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 shadow-sm"
                 placeholder="your.email@example.com"
@@ -166,7 +201,7 @@ export default function ContactUsPage() {
               <Input
                 type="text"
                 id="subject"
-                name="subject"
+                {...register("subject")}
                 className="w-full rounded-md border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 shadow-sm"
                 placeholder="What is this regarding?"
               />
@@ -181,44 +216,23 @@ export default function ContactUsPage() {
               </label>
               <Textarea
                 id="message"
-                name="message"
+                {...register("message")}
                 rows={4}
                 required
                 className="w-full rounded-md border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 shadow-sm"
                 placeholder="How can we help you?"
               />
             </div>
-
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  id="terms"
-                  name="terms"
-                  type="checkbox"
-                  className="h-4 w-4 text-gray-900 border-gray-300 rounded"
-                  required
-                />
-              </div>
-              <div className="ml-3 text-sm">
-                <label htmlFor="terms" className="text-gray-600">
-                  I agree to the{" "}
-                  <a href="#" className="text-gray-900 underline">
-                    Privacy Policy
-                  </a>
-                </label>
-              </div>
-            </div>
-
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={createContactMutation.isPending}
               className={`w-full px-5 py-2.5 rounded-md font-medium text-white transition-all duration-200 ${
-                isSubmitting
+                createContactMutation.isPending
                   ? "bg-gray-400 cursor-wait"
                   : "bg-gray-900 hover:bg-black hover:shadow-md"
               }`}
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              {createContactMutation.isPending ? "Sending..." : "Send Message"}
             </button>
 
             <p className="text-xs text-center text-gray-500 mt-3">
