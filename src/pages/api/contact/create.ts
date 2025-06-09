@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { Contact } from "@/api/models/Contact";
 import { createContact } from "@/api/services/Contact";
+import { CreateContact } from "@/services/contactService";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,13 +17,11 @@ export default async function handler(
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const contactData: Contact = {
+    const contactData: CreateContact = {
       name,
       email,
       subject,
       message,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     const result = await createContact(contactData);

@@ -6,6 +6,7 @@ export interface CreateContact {
   email: string;
   subject: string;
   message: string;
+  read?: boolean;
 }
 
 export const contactService = {
@@ -19,6 +20,13 @@ export const contactService = {
   },
   create: async (contactData: CreateContact): Promise<Contact> => {
     const { data } = await api.post<Contact>("/contact/create", contactData);
+    return data;
+  },
+  update: async (
+    id: string,
+    contactData: Partial<CreateContact>
+  ): Promise<Contact> => {
+    const { data } = await api.put<Contact>(`/contact/${id}`, contactData);
     return data;
   },
   delete: async (id: string): Promise<void> => {

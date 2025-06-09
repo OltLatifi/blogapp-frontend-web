@@ -64,6 +64,44 @@ export default async function handler(
         return res
           .status(200)
           .json({ message: "Contact deleted successfully" });
+      case "PUT":
+        const updateSession = await getSession(req, res);
+        const { name, email, subject, message, read } = req.body;
+        const contactToUpdate = await db
+          .collection("contacts")
+          .findOne({ _id: new ObjectId(id) });
+        if (!contactToUpdate) {
+          return res.status(404).json({ error: "Contact not found" });
+        }
+        if (updateSession.user.role !== "admin") {
+          return res
+            .status(403)
+            .json({ error: "Unauthorized to update this contact" });
+        }
+        if (!name || !email || !subject || !message) {
+          return res.status(400).json({ error: "All fields are required" });
+        }
+        const updatedContact = {
+          name,
+          email,
+          subject,
+          message,
+          read,
+          updatedAt: new Date(),
+        };
+
+        const result = await db
+          .collection("contacts")
+          .updateOne({ _id: new ObjectId(id) }, { $set: updatedContact });
+        if (result.modifiedCount === 0) {
+          return res
+            .status(404)
+            .json({ error: "Contact not found or no changes made" });
+        }
+        return res.status(200).json({
+          message: "Contact updated successfully",
+          contact: updatedContact,
+        });
 
       default:
         res.setHeader("Allow", ["GET", "PUT", "DELETE"]);

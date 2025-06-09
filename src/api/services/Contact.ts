@@ -1,12 +1,13 @@
 import getMongoClient from "@/lib/mongodb";
-import { Contact } from "../models/Contact";
 import { ObjectId } from "mongodb";
+import { CreateContact } from "@/services/contactService";
 
-export async function createContact(contact: Contact) {
+export async function createContact(contact: CreateContact) {
   const client = await getMongoClient();
   const db = client.db("myapp");
   const result = await db.collection("contacts").insertOne({
     ...contact,
+    read: false, // Default to false if not provided
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -36,4 +37,19 @@ export async function deleteContact(id: string) {
   const db = client.db("myapp");
   await db.collection("contacts").deleteOne({ _id: new ObjectId(id) });
   return { success: true };
+}
+
+export async function updateContact(
+  id: string,
+  contact: Partial<CreateContact>
+) {
+  const client = await getMongoClient();
+  const db = client.db("myapp");
+  const result = await db
+    .collection("contacts")
+    .updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { ...contact, updatedAt: new Date() } }
+    );
+  return result;
 }
