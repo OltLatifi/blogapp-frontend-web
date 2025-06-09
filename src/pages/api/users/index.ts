@@ -1,5 +1,5 @@
+import { getUsers } from "@/api/services/User";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getBlogs } from "@/api/services/Blog";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,10 +10,10 @@ export default async function handler(
   }
 
   try {
-    const blogs = await getBlogs();
-    return res.status(200).json(blogs);
+    const users = await getUsers();
+    return res.status(200).json(users);
   } catch (error) {
-    console.error("Error fetching blogs:", error);
-    return res.status(500).json({ error: "Failed to fetch blogs" });
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ error: "Failed to fetch users" });
   }
 }
