@@ -1,16 +1,16 @@
+import Footer from "./footer";
 import Navbar from "./navbar";
 
 interface LayoutProps {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
-    return (
-        <>
-            <Navbar />
-            <div className="w-full mx-auto mb-16">
-                {children}
-            </div>
-        </>
-    );
+  return (
+    <>
+      <Navbar />
+      <div className="w-full mx-auto mb-16">{children}</div>
+      <Footer />
+    </>
+  );
 }
