@@ -4,7 +4,6 @@ import { contactSchema } from "@/schemas/contactSchema";
 import { contactService } from "@/services/contactService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   FaFacebook,
@@ -28,7 +27,6 @@ export default function ContactUsPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
   } = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
@@ -47,8 +45,8 @@ export default function ContactUsPage() {
       toast.success("Message sent successfully!");
       reset();
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.error || "Failed to send message");
+    onError: () => {
+      toast.error("Failed to send message");
     },
   });
 
@@ -86,8 +84,8 @@ export default function ContactUsPage() {
           Contact Us
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          We're here to help with any questions you may have about our services.
-          Reach out to us and we'll respond as soon as we can.
+          We are here to help with any questions you may have about our services.
+          Reach out to us and we will respond as soon as we can.
         </p>
       </div>
 
@@ -97,7 +95,7 @@ export default function ContactUsPage() {
             Get in Touch
           </h2>
           <p className="text-md md:text-lg text-gray-600 leading-relaxed mb-6">
-            We'd love to hear from you! Whether you have a question, feedback,
+            We would love to hear from you! Whether you have a question, feedback,
             or just want to say hello, please fill out the form.
           </p>
 
@@ -236,7 +234,7 @@ export default function ContactUsPage() {
             </button>
 
             <p className="text-xs text-center text-gray-500 mt-3">
-              We'll get back to you within 24-48 hours
+              We will get back to you within 24-48 hours
             </p>
           </form>
         </div>
