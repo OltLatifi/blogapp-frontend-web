@@ -205,10 +205,21 @@ export default function AboutPage({ teamMembers }: AboutPageProps) {
 }
 
 export const getStaticProps: GetStaticProps<AboutPageProps> = async () => {
-  const teamMembers = await teamMembersService.getAll();
-  return {
-    props: {
-      teamMembers: teamMembers || [],
-    },
-  };
+  try {
+    const teamMembers = await teamMembersService.getAll();
+    return {
+      props: {
+        teamMembers: teamMembers || [],
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error("Error fetching team members for static generation:", error);
+    return {
+      props: {
+        teamMembers: [],
+      },
+      revalidate: 30,
+    };
+  }
 };

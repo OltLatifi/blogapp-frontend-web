@@ -9,10 +9,15 @@ const baseUrl =
 
 export const teamMembersService = {
   getAll: async (): Promise<TeamMember[]> => {
-    const { data } = await axios.get<TeamMember[]>(
-      `${baseUrl}/api/teamMembers`
-    );
-    return data;
+    try {
+      const { data } = await axios.get<TeamMember[]>(
+        `${baseUrl}/api/teamMembers`
+      );
+      return data;
+    } catch (error) {
+      console.error("Failed to fetch team members:", error);
+      return [];
+    }
   },
   getById: async (id: string): Promise<TeamMember> => {
     const { data } = await api.get<TeamMember>(`/teamMembers/${id}`);

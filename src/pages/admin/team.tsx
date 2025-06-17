@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 export default function Team() {
   const queryClient = useQueryClient();
@@ -101,7 +102,7 @@ export default function Team() {
             <Card key={member._id} className="p-0 pb-5">
               <div className="relative h-48 bg-gray-100">
                 {member.imageUrl ? (
-                  <img
+                  <Image
                     src={member.imageUrl}
                     alt={member.name}
                     className="w-full h-full object-cover"

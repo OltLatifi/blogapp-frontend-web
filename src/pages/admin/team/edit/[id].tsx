@@ -11,9 +11,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { teamMembersService } from "@/services/teamMembersService";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, ArrowLeft, Upload, X, Image } from "lucide-react";
+import { AlertCircle, ArrowLeft, ImageDown, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { TeamMember } from "@/api/models/TeamMember";
+import Image from "next/image";
 
 interface TeamMemberFormData {
   _id?: string;
@@ -370,7 +371,7 @@ export default function EditTeamMember() {
                               onClick={() => open()}
                               className="border-2 border-dashed rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
                             >
-                              <Image className="h-12 w-12 text-gray-400 mb-2" />
+                              <ImageDown className="h-12 w-12 text-gray-400 mb-2" />
                               <p className="font-medium">
                                 Click to upload an image
                               </p>
@@ -380,7 +381,7 @@ export default function EditTeamMember() {
                             </div>
                           ) : (
                             <div className="relative rounded-lg overflow-hidden border">
-                              <img
+                              <Image
                                 src={formData.imageUrl}
                                 alt="Team member profile"
                                 className="w-full aspect-square object-cover"
