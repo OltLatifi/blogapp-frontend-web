@@ -3,19 +3,15 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { teamMembersService } from "@/services/teamMembersService";
 import { GetStaticProps } from "next";
+import { useRouter } from "next/router";
+import { TeamMember } from "@/api/models/TeamMember";
 
-interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-  bio: string;
-  imageUrl?: string;
-}
 interface AboutPageProps {
   teamMembers: TeamMember[];
 }
 
 export default function AboutPage({ teamMembers }: AboutPageProps) {
+  const router = useRouter();
   return (
     <motion.div
       className="max-w-7xl mx-auto px-4 py-12 space-y-16"
@@ -172,19 +168,22 @@ export default function AboutPage({ teamMembers }: AboutPageProps) {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {teamMembers.map((member: TeamMember) => (
             <motion.div
-              key={member.id}
+              key={member._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
-              <Card className="overflow-hidden border-0 shadow-lg h-full hover:shadow-xl transition-shadow duration-300">
-                <div className="relative h-64 w-full bg-gray-100">
+              <Card
+                className="p-0 pb-2 rounded-t-xl border-0 shadow-lg h-full hover:shadow-xl transition-shadow duration-300"
+                onClick={() => router.push(`/about/${member._id}`)}
+              >
+                <div className="relative h-64 w-full rounded-t-xl bg-gray-100">
                   {member.imageUrl && (
                     <Image
                       src={member.imageUrl}
                       alt={member.name}
                       fill
-                      className="object-cover"
+                      className="object-cover rounded-t-xl"
                     />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
@@ -193,8 +192,8 @@ export default function AboutPage({ teamMembers }: AboutPageProps) {
                     <p className="text-gray-200">{member.role}</p>
                   </div>
                 </div>
-                <CardContent className="py-4 bg-white">
-                  <p className="text-gray-600">{member.bio}</p>
+                <CardContent className="py-1 bg-white">
+                  <p className="text-gray-600 line-clamp-2">{member.bio}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -213,48 +212,3 @@ export const getStaticProps: GetStaticProps<AboutPageProps> = async () => {
     },
   };
 };
-
-// export const getStaticProps: GetStaticProps<AboutPageProps> = async () => {
-//   // Mock data for team members since we don't have real data yet
-//   const mockTeamMembers: TeamMember[] = [
-//     {
-//       id: "1",
-//       name: "Jane Doe",
-//       role: "Founder & CEO",
-//       bio: "Jane has over 10 years of experience in digital publishing and content management.",
-//       imageUrl:
-//         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=500&auto=format&fit=crop",
-//     },
-//     {
-//       id: "2",
-//       name: "John Smith",
-//       role: "CTO",
-//       bio: "John leads our engineering team with expertise in full-stack web development and cloud architecture.",
-//       imageUrl:
-//         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&h=500&auto=format&fit=crop",
-//     },
-//     {
-//       id: "3",
-//       name: "Emily Wang",
-//       role: "Content Director",
-//       bio: "Emily oversees our content strategy and ensures high-quality publications across the platform.",
-//       imageUrl:
-//         "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&h=500&auto=format&fit=crop",
-//     },
-//     {
-//       id: "4",
-//       name: "Michael Johnson",
-//       role: "UX Designer",
-//       bio: "Michael crafts seamless user experiences with a focus on accessibility and usability.",
-//       imageUrl:
-//         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&h=500&auto=format&fit=crop",
-//     },
-//   ];
-
-//   return {
-//     props: {
-//       copyrightYear: new Date().getFullYear(),
-//       teamMembers: mockTeamMembers,
-//     },
-//   };
-// };

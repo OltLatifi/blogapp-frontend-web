@@ -1,5 +1,4 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import AdminLayout from "@/components/layouts/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Contact } from "@/api/models/Contact";
@@ -68,110 +67,108 @@ export default function AdminMessagesPage() {
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl md:text-3xl font-bold">Message Center</h1>
-        </div>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl md:text-3xl font-bold">Message Center</h1>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Message List */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <h2 className="text-xl font-semibold flex items-center justify-between">
-                Messages
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                  {messages.filter((m) => !m.read).length} New
-                </span>
-              </h2>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {messages.map((message) => (
-                  <div
-                    key={message._id}
-                    className={`p-3 rounded-lg cursor-pointer ${
-                      selectedMessage?._id === message._id
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-50"
-                    } ${!message.read ? "border-l-4 border-blue-500" : ""}`}
-                    onClick={() => handleSelectMessage(message)}
-                  >
-                    <div className="flex justify-between">
-                      <p
-                        className={`font-medium ${
-                          !message.read ? "text-gray-900" : "text-gray-700"
-                        }`}
-                      >
-                        {message.subject}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {message.createdAt
-                          ? formatDate(message.createdAt)
-                          : "Unknown"}
-                      </p>
-                    </div>
-                    <p className="text-sm truncate">{message.message}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Message Content */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <h2 className="text-xl font-semibold">
-                {selectedMessage ? "Message Details" : "Select a message"}
-              </h2>
-            </CardHeader>
-            <CardContent>
-              {selectedMessage ? (
-                <div className="space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-sm text-gray-500">
-                        From: {selectedMessage.name} ({selectedMessage.email})
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Received:{" "}
-                        {selectedMessage.createdAt
-                          ? formatDate(selectedMessage.createdAt)
-                          : "Unknown"}
-                      </p>
-                    </div>
-                    <Button
-                      onClick={() => handleDeleteMessage(selectedMessage._id)}
-                      variant="destructive"
-                      size="sm"
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Message List */}
+        <Card className="lg:col-span-1">
+          <CardHeader>
+            <h2 className="text-xl font-semibold flex items-center justify-between">
+              Messages
+              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                {messages.filter((m) => !m.read).length} New
+              </span>
+            </h2>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {messages.map((message) => (
+                <div
+                  key={message._id}
+                  className={`p-3 rounded-lg cursor-pointer ${
+                    selectedMessage?._id === message._id
+                      ? "bg-gray-100"
+                      : "hover:bg-gray-50"
+                  } ${!message.read ? "border-l-4 border-blue-500" : ""}`}
+                  onClick={() => handleSelectMessage(message)}
+                >
+                  <div className="flex justify-between">
+                    <p
+                      className={`font-medium ${
+                        !message.read ? "text-gray-900" : "text-gray-700"
+                      }`}
                     >
-                      Delete
-                    </Button>
-                  </div>
-
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <h2 className="text-2xl font-medium mb-2">
-                      Message Content:
-                    </h2>
-                    <h3 className="text-xl font-medium">
-                      {selectedMessage.subject}
-                    </h3>
-                    <p className="whitespace-pre-line">
-                      {selectedMessage.message}
+                      {message.subject}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {message.createdAt
+                        ? formatDate(message.createdAt)
+                        : "Unknown"}
                     </p>
                   </div>
+                  <p className="text-sm truncate">{message.message}</p>
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">
-                    Select a message from the list to view its details
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Message Content */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <h2 className="text-xl font-semibold">
+              {selectedMessage ? "Message Details" : "Select a message"}
+            </h2>
+          </CardHeader>
+          <CardContent>
+            {selectedMessage ? (
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      From: {selectedMessage.name} ({selectedMessage.email})
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Received:{" "}
+                      {selectedMessage.createdAt
+                        ? formatDate(selectedMessage.createdAt)
+                        : "Unknown"}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleDeleteMessage(selectedMessage._id)}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    Delete
+                  </Button>
+                </div>
+
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h2 className="text-2xl font-medium mb-2">
+                    Message Content:
+                  </h2>
+                  <h3 className="text-xl font-medium">
+                    {selectedMessage.subject}
+                  </h3>
+                  <p className="whitespace-pre-line">
+                    {selectedMessage.message}
                   </p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-500">
+                  Select a message from the list to view its details
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
-    </AdminLayout>
+    </div>
   );
 }

@@ -44,19 +44,27 @@ export default async function handler(
             .status(400)
             .json({ error: "Name, role, and bio are required" });
         }
-        const updateResult = await db
+
+        const existingMember = await db
           .collection("teamMembers")
-          .findOneAndUpdate(
-            { _id: new ObjectId(id) },
-            { $set: { name, role, bio, imageUrl, updatedAt: new Date() } },
-            { returnDocument: "after" }
-          );
-        if (!updateResult || !updateResult.value) {
-          return res
-            .status(404)
-            .json({ error: "Team member not found or update failed" });
+          .findOne({ _id: new ObjectId(id) });
+
+        if (!existingMember) {
+          return res.status(404).json({ error: "Team member not found" });
         }
-        return res.status(200).json(updateResult.value);
+
+        await db
+          .collection("teamMembers")
+          .updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { name, role, bio, imageUrl, updatedAt: new Date() } }
+          );
+
+        const updatedMember = await db
+          .collection("teamMembers")
+          .findOne({ _id: new ObjectId(id) });
+
+        return res.status(200).json(updatedMember);
       default:
         return res.status(405).json({ error: "Method not allowed" });
     }
