@@ -44,6 +44,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Users", href: "/admin/users", icon: Users },
     { name: "Messages", href: "/admin/messages", icon: MessageSquare },
+    { name: "Team", href: "/admin/team", icon: Users },
   ];
 
   if (status === "loading") {

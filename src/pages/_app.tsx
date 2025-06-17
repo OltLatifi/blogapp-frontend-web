@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { Layout } from "@/components/layout";
 import { useRouter } from "next/router";
+import AdminLayout from "@/components/layouts/AdminLayout";
 
 const queryClient = new QueryClient();
 
@@ -20,8 +21,10 @@ export default function App({ Component, pageProps }: AppProps) {
       <SessionProvider session={pageProps.session}>
         <BlogProvider>
           {isAdminPage ? (
-            // Admin pages don't use the Layout component (which includes the navbar)
-            <Component {...pageProps} />
+            // Admin pages use the AdminLayout
+            <AdminLayout>
+              <Component {...pageProps} />
+            </AdminLayout>
           ) : (
             // Regular pages use the Layout with navbar
             <Layout>

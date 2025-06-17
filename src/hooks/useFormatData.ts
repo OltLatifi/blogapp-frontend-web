@@ -6,7 +6,7 @@ type DateFormatOptions = {
 export function useFormatDate() {
   const formatDate = (
     date: Date | string | undefined,
-    options: DateFormatOptions = { includeYear: true, includeTime: true }
+    options: DateFormatOptions = { includeYear: true, includeTime: false }
   ) => {
     if (!date) return "Unknown";
 

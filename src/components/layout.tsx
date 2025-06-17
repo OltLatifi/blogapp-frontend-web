@@ -7,10 +7,10 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <div className="w-full mx-auto mb-16">{children}</div>
+      <div className="w-full mx-auto flex-grow">{children}</div>
       <Footer />
-    </>
+    </div>
   );
 }
