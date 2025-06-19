@@ -82,7 +82,7 @@ export default function SignIn() {
               <div>
                 <input
                   type="password"
-                  placeholder="Fjalëkalimi"
+                  placeholder="Password"
                   value={password}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setPassword(e.target.value)
@@ -93,27 +93,20 @@ export default function SignIn() {
               </div>
 
               <Button type="submit" disabled={isSubmitting} className="w-full">
-                {isSubmitting ? "Duke u kyçur..." : "Kyçu"}
+                {isSubmitting ? "Logging in..." : "Login"}
               </Button>
             </div>
           </form>
 
           <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t "></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-800 text-gray-400">
-                  Or continue with
-                </span>
-              </div>
-            </div>
+              <span className="px-2 text-gray-400 text-center w-full block">
+                Or continue with
+              </span>
 
             <button
               onClick={handleGoogleSignIn}
               disabled={isSubmitting}
-              className="mt-4 w-full flex items-center justify-center gap-3 px-4 py-2 border  rounded-md shadow-sm   hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
+              className="mt-4 w-full flex items-center justify-center gap-3 px-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
