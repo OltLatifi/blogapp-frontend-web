@@ -105,6 +105,7 @@ export default function Team() {
                   <Image
                     src={member.imageUrl}
                     alt={member.name}
+                    fill
                     className="w-full h-full object-cover"
                   />
                 ) : (

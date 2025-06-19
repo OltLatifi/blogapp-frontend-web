@@ -381,9 +381,12 @@ export default function EditTeamMember() {
                             </div>
                           ) : (
                             <div className="relative rounded-lg overflow-hidden border">
+                              {" "}
                               <Image
                                 src={formData.imageUrl}
                                 alt="Team member profile"
+                                width={400}
+                                height={400}
                                 className="w-full aspect-square object-cover"
                               />
                               <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
